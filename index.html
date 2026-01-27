@@ -353,6 +353,9 @@
     body { padding-bottom: env(safe-area-inset-bottom); }
 
 </style>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0b1220">
+<meta name="mobile-web-app-capable" content="yes">
 </head>
 <body>
   <div class="wrap">
@@ -523,6 +526,13 @@
       setAll(anyClosed());
     });
   })();
+</script>
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/sw.js");
+    });
+  }
 </script>
 
 </body>
