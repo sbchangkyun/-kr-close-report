@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" sizes="192x192" href="/icon-192.png">
+  <link rel="icon" sizes="512x512" href="/icon-512.png">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+  <meta name="theme-color" content="#0B1220" />
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>김과장의 🇰🇷 마감 숏 리포트 (2026-01-27)</title>
+
+  <!-- Simple favicon (works best when opened as a webpage in Chrome) -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230B1220'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-size='28'%3E%F0%9F%87%B0%F0%9F%87%B7%3C/text%3E%3C/svg%3E">
+  <meta name="theme-color" content="#0B1220" />
+
+  <style>
+    :root {
+      --bg: #0B1220;
+      --card: #121A2C;
+      --card2: #0F172A;
+      --text: #E6EDF7;
+      --muted: #A9B7D0;
+      --line: rgba(255,255,255,.10);
+      --accent: #6EE7B7;
+      --warn: #FBBF24;
+      --danger: #FB7185;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: radial-gradient(1200px 600px at 20% 0%, rgba(110,231,183,.10), transparent 55%),
+                  radial-gradient(900px 500px at 100% 20%, rgba(251,191,36,.10), transparent 50%),
+                  var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", Arial, sans-serif;
+      line-height: 1.5;
+    }
+    .wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 16px 14px 28px;
+    }
+    .top {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+      background: rgba(11,18,32,.75);
+      border-bottom: 1px solid var(--line);
+      padding: 12px 14px;
+      margin: 0 -14px 14px;
+    }
+    .title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .title h1 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: -0.2px;
+    }
+    .title .date {
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .hint {
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .card {
+      background: linear-gradient(180deg, rgba(18,26,44,.92), rgba(15,23,42,.92));
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px 14px 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+      margin-bottom: 12px;
+    }
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      letter-spacing: -0.1px;
+    }
+    .mono { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+    .rows { display: grid; gap: 8px; }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 10px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    .row .l { color: var(--muted); }
+    .row .r { text-align: right; }
+    .bul { margin: 10px 0 0; padding: 0; list-style: none; }
+    .bul li {
+      margin: 6px 0;
+      padding-left: 10px;
+      position: relative;
+      color: var(--text);
+    }
+    .bul li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--muted);
+    }
+    .list { margin: 8px 0 0; padding: 0; list-style: none; }
+    .list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 10px;
+      border-top: 1px dashed rgba(255,255,255,.10);
+    }
+    .list li:first-child { border-top: none; }
+    .tag { color: var(--muted); white-space: nowrap; }
+    .val { text-align: right; }
+    .pill {
+      display: block;
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      font-size: 13px;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: keep-all;
+    }
+    .pill strong { font-weight: 700; }
+    .small { font-size: 12px; color: var(--muted); }
+    .section {
+      display: grid;
+      gap: 10px;
+    }
+    .split {
+      display: grid;
+      gap: 10px;
+    }
+    @media (min-width: 560px) {
+      .split { grid-template-columns: 1fr 1fr; }
+    }
+    .hr {
+      height: 1px;
+      background: var(--line);
+      margin: 10px 0;
+    }
+  
+    /* Dropdown sections (details/summary) */
+    details.card {
+      padding: 0;
+    }
+    details.card > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 14px 14px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      user-select: none;
+    }
+    details.card > summary::-webkit-details-marker { display: none; }
+    details.card > summary .sum-title {
+      font-size: 14px;
+      letter-spacing: -0.1px;
+      margin: 0;
+      font-weight: 700;
+    }
+    details.card > summary .chev {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      flex: 0 0 auto;
+      transition: transform .15s ease;
+    }
+    details.card[open] > summary .chev { transform: rotate(180deg); }
+    details.card .card-body {
+      padding: 0 14px 14px;
+      border-top: 1px solid rgba(255,255,255,.08);
+    }
+
+    /* Top bar button */
+    .topbtn {
+      margin-left: auto;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      font-size: 12px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .topbtn:active { transform: translateY(1px); }
+
+
+    /* One-line rows with horizontal scroll (no data loss) */
+    .nowrap-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+    }
+    .nowrap-scroll li {
+      white-space: nowrap;
+      min-width: max-content;
+    }
+    .nowrap-scroll .tag,
+    .nowrap-scroll .val {
+      white-space: nowrap;
+    }
+
+
+    /* Summary title styling (icon + title + meta badge) */
+    details.card > summary {
+      padding: 14px 14px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      user-select: none;
+    }
+    .sum-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+    .sicon {
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      flex: 0 0 auto;
+      font-size: 14px;
+      line-height: 1;
+    }
+    .stitle {
+      font-size: 14px;
+      letter-spacing: -0.1px;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .sum-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 0 0 auto;
+    }
+    .smeta {
+      padding: 6px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      font-size: 11px;
+      color: rgba(255,255,255,.85);
+      white-space: nowrap;
+    }
+
+
+    /* Finance-style monochrome icons */
+    :root { --accent: rgba(96, 165, 250, 1); } /* finance-blue */
+    .sicon {
+      border: 1px solid rgba(96, 165, 250, .22);
+      background: rgba(96, 165, 250, .10);
+    }
+    .sicon svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--accent);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Finance meta tweak */
+
+    .smeta {
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.03);
+    }
+
+
+    /* App-like sticky top bar (iOS finance style) */
+    .wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 14px 28px;
+    }
+    .top {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      margin: 0 -14px;
+      padding: calc(12px + env(safe-area-inset-top)) 14px 10px;
+      background: rgba(11, 18, 32, .72);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    .hint { margin-top: 6px; }
+
+    /* Grouped list container */
+    .group {
+      margin-top: 12px;
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 18px;
+      overflow: hidden;
+      background: rgba(18,26,44,.55);
+      box-shadow: 0 12px 30px rgba(0,0,0,.22);
+    }
+
+    /* Turn section cards into list cells */
+    details.card {
+      margin: 0;
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+    details.card:not(:last-child) {
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    details.card > summary {
+      padding: 14px 14px;
+    }
+    details.card > summary:active {
+      background: rgba(255,255,255,.04);
+    }
+    details.card .card-body {
+      padding: 0 14px 14px;
+    }
+
+    /* Safe-area bottom padding */
+    body { padding-bottom: env(safe-area-inset-bottom); }
+
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="title">
+        <h1>🇰🇷 마감 숏 리포트</h1>
+        <button id="toggleAll" class="topbtn" type="button">전체 펼치기</button>
+        <div class="date mono">2026-01-27</div>
+      </div>
+      <div class="hint">오류 발생 시 <b>마운자로김과장</b>에게 문의바랍니다.</div>
+    </div>
+
+    <div class="group">
+
+    <details class="card">
+  <summary>
+    <span class="sum-left"><span class="sicon"><svg viewBox="0 0 24 24" aria-hidden="true">
+  <path d="M4 19V5"></path>
+  <path d="M4 19H20"></path>
+  <path d="M7 14l4-4 3 3 5-6"></path>
+</svg></span><span class="stitle">지수</span></span><span class="sum-right"><span class="smeta">오늘 마감</span><span class="chev">▾</span></span>
+  </summary>
+  <div class="card-body">
+<div class="rows mono">
+        <div class="row">
+          <div class="l">KOSPI</div>
+          <div class="r"><b>5,027.25</b> (🔺 2.73%)</div>
+        </div>
+        <div class="row">
+          <div class="l">KOSDAQ</div>
+          <div class="r"><b>1,032.34</b> (🔺 1.71%)</div>
+        </div>
+      </div>
+      <ul class="bul">
+        <li>코스피 이슈: 외국인 대규모 순매수로 5,000선 ‘첫 안착’</li>
+        <li>코스닥 이슈: 기관 매수 우위로 1,000선 상단 재차 확장(외국인 차익실현)</li>
+      </ul>
+  </div>
+</details>
+
+
+    <details class="card">
+  <summary>
+    <span class="sum-left"><span class="sicon"><svg viewBox="0 0 24 24" aria-hidden="true">
+  <path d="M5 8h9"></path>
+  <path d="M10 5l4 3-4 3"></path>
+  <path d="M19 16H10"></path>
+  <path d="M14 13l-4 3 4 3"></path>
+</svg></span><span class="stitle">외국인 수급</span></span><span class="sum-right"><span class="smeta">최근 5일</span><span class="chev">▾</span></span>
+  </summary>
+  <div class="card-body">
+<div class="small mono">(KOSPI | KOSDAQ)</div>
+      <ul class="list mono nowrap-scroll">
+        <li><span class='tag'>26-01-27(화)</span><span class='val'>+8,513억원(🔺) | -1,109억원(🔽)</span></li><li><span class='tag'>26-01-26(월)</span><span class='val'>-1,662억원(🔽) | +4,434억원(🔺)</span></li><li><span class='tag'>26-01-23(금)</span><span class='val'>+1,369억원(🔺) | +933억원(🔺)</span></li><li><span class='tag'>26-01-22(목)</span><span class='val'>-3,029억원(🔽) | +667억원(🔺)</span></li><li><span class='tag'>26-01-21(수)</span><span class='val'>+4,457억원(🔺) | -2,721억원(🔽)</span></li>
+      </ul>
+      <ul class="bul">
+        <li>코스피 이슈: 전일 순매도(−1,662) → 대규모 순매수(+8,513)로 방향 전환</li>
+        <li>코스닥 이슈: 전일 대규모 순매수(+4,434) → 순매도(−1,109)로 차익실현 전환</li>
+      </ul>
+  </div>
+</details>
+
+
+    <details class="card">
+  <summary>
+    <span class="sum-left"><span class="sicon"><svg viewBox="0 0 24 24" aria-hidden="true">
+  <path d="M7 7h10"></path>
+  <path d="M9 7l-2 10"></path>
+  <path d="M15 7l2 10"></path>
+  <path d="M8 14h8"></path>
+</svg></span><span class="stitle">환율</span></span><span class="sum-right"><span class="smeta">최근 5일</span><span class="chev">▾</span></span>
+  </summary>
+  <div class="card-body">
+<div class="small mono">USD/KRW</div>
+      <ul class="list mono">
+        <li><span class='tag'>26-01-27(화)</span><span class='val'>1,444.55 (🔽 -1.31)</span></li><li><span class='tag'>26-01-26(월)</span><span class='val'>1,445.86 (🔽 -0.50)</span></li><li><span class='tag'>26-01-23(금)</span><span class='val'>1,446.36 (🔽 -17.77)</span></li><li><span class='tag'>26-01-22(목)</span><span class='val'>1,464.13 (🔽 -0.99)</span></li><li><span class='tag'>26-01-21(수)</span><span class='val'>1,465.12 (⚪ -0.15)</span></li>
+      </ul>
+      <ul class="bul">
+        <li>환율 이슈: 주요원인: 달러 약세(보합권) + 위험자산 선호로 원화 강세</li>
+      </ul>
+  </div>
+</details>
+
+
+    <details class="card">
+  <summary>
+    <span class="sum-left"><span class="sicon"><svg viewBox="0 0 24 24" aria-hidden="true">
+  <path d="M20 13a8 8 0 10-16 0"></path>
+  <path d="M12 13l4-4"></path>
+  <path d="M7 13h.01"></path>
+  <path d="M17 13h.01"></path>
+</svg></span><span class="stitle">달러 매수 포인트</span></span><span class="sum-right"><span class="smeta">55/100</span><span class="chev">▾</span></span>
+  </summary>
+  <div class="card-body">
+<div class="pill mono">🟡 분할 매수—1,440원대 2~3회 레벨 분할, 급반등 추격 금지</div>
+      <div class="hr"></div>
+      <ul class="bul mono">
+        <li>달러 인덱스(DXY): 🟡 96.79p 부근, FOMC 앞두고 보합권</li>
+        <li>미국 금리/달러 모멘텀: ⚪ FOMC(1/27~28) 결과 대기, 발언 톤에 따라 변동성 확대</li>
+        <li>외국인 수급: ⚪ 코스피 강한 재유입 vs 코스닥 차익실현(쏠림)</li>
+        <li>무역수지/수급: ⚪ 1,440원대 결제·네고 수요 공방(레벨 분할 유리)</li>
+      </ul>
+  </div>
+</details>
+
+
+    <details class="card">
+  <summary>
+    <span class="sum-left"><span class="sicon"><svg viewBox="0 0 24 24" aria-hidden="true">
+  <path d="M8 6h12"></path>
+  <path d="M8 12h12"></path>
+  <path d="M8 18h12"></path>
+  <path d="M4 6l1 1 2-2"></path>
+  <path d="M4 12l1 1 2-2"></path>
+  <path d="M4 18l1 1 2-2"></path>
+</svg></span><span class="stitle">내일 체크</span></span><span class="sum-right"><span class="smeta">해외/국내</span><span class="chev">▾</span></span>
+  </summary>
+  <div class="card-body">
+<div class="section">
+        <div>
+          <div class="small"><b>[해외]</b></div>
+          <ul class="bul">
+            <li>FOMC 2일차(1/27~28) 결과·파월 기자회견: 금리보다 ‘독립성 이슈’ 발언 리스크</li>
+            <li>달러 변동성: FOMC 톤 변화 시 DXY·원달러 즉각 반응 가능</li>
+          </ul>
+        </div>
+        <div>
+          <div class="small"><b>[국내]</b></div>
+          <ul class="bul">
+            <li>외국인 수급 연속성: 코스피 +8,513억원 이후 재유입/되돌림 확인</li>
+            <li>원달러 1,440원대 수급: 월말 포지션 조정 + 수출 네고/결제 수요 체크</li>
+          </ul>
+        </div>
+      </div>
+  </div>
+</details>
+</div>
+
+
+
+    <div class="small" style="text-align:center; padding: 10px 0 0;">© 마운자로김과장 · 무단 수정·배포 금지</div>
+  </div>
+
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
+  }
+</script>
+
+
+<script>
+  (function () {
+    const btn = document.getElementById("toggleAll");
+    const sections = Array.from(document.querySelectorAll("details.card"));
+    if (!btn || !sections.length) return;
+
+    function anyClosed() {
+      return sections.some(s => !s.open);
+    }
+    function setAll(open) {
+      sections.forEach(s => s.open = open);
+      btn.textContent = open ? "전체 접기" : "전체 펼치기";
+    }
+    // Default: all collapsed
+    setAll(false);
+
+    btn.addEventListener("click", () => {
+      setAll(anyClosed());
+    });
+  })();
+</script>
+
+</body>
+</html>
