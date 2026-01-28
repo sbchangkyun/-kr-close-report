@@ -34,7 +34,7 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          python scripts/generate_report.py
+          python .github/workflows/scripts/generate_report.py
 
       - name: Commit & Push (only if changed)
         run: |
