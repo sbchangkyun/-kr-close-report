@@ -9,6 +9,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: daily-close-report
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -32,10 +36,18 @@ jobs:
         run: |
           python scripts/generate_report.py
 
-      - name: Commit & Push
+      - name: Commit & Push (only if changed)
         run: |
           git config user.name "close-report-bot"
           git config user.email "close-report-bot@users.noreply.github.com"
-          git add index.html
-          git commit -m "chore: update close report" || echo "No changes"
+
+          git add index.html sw.js || true
+
+          # 변경 없으면 종료
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git commit -m "chore: update close report"
           git push
