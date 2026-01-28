@@ -53,45 +53,40 @@ def gemini_generate_commentary(date_str: str) -> dict:
     genai.configure(api_key=api_key)
 
     # 무료/가벼운 모델 우선. 필요 시 Actions env로 GEMINI_MODEL을 바꿀 수 있게 해둠.
-    model_name = os.environ.get("GEMINI_MODEL", "gemini-1.5-flash")
-    model = genai.GenerativeModel(model_name)
+    # 무료/가벼운 모델 우선. 필요 시 Actions env로 GEMINI_MODEL을 바꿀 수 있게 해둠.
+    # (주의) google-generativeai(v1beta)에서는 일부 모델명이 404(NotFound)로 실패할 수 있어, 안전한 후보를 순차 시도합니다.
+    preferred_model = os.environ.get("GEMINI_MODEL", "gemini-1.5-flash-latest")
+    candidates = [
+        preferred_model,
+        "gemini-1.5-flash-latest",
+        "gemini-1.5-pro-latest",
+        "gemini-1.0-pro",
+    ]
+    # 중복 제거(순서 유지)
+    seen = set()
+    model_candidates = []
+    for name in candidates:
+        if name and name not in seen:
+            seen.add(name)
+            model_candidates.append(name)
 
-    prompt = f"""
-당신은 한국 주식 '장마감 숏 리포트' 문장 생성기입니다.
-날짜는 {date_str} 입니다.
-아래 항목을 한국어로 아주 짧게 1줄씩 생성하세요. 긴 문단 금지.
+    last_err = None
+    for model_name in model_candidates:
+        try:
+            print(f"[gemini] using model: {model_name}")
+            model = genai.GenerativeModel(model_name)
+            resp = model.generate_content(prompt)
+            return _extract_json(resp.text or "")
+        except Exception as e:
+            last_err = e
+            msg = str(e)
+            # 모델명/버전 불일치(NotFound)면 다음 후보로 재시도
+            if ("404" in msg) or ("NotFound" in msg) or ("is not found" in msg) or ("not supported" in msg):
+                print(f"[gemini] model not available: {model_name} -> {msg}")
+                continue
+            raise
 
-반드시 JSON만 출력:
-{{
-  "kospi_driver": "외국인/기관/이슈 중심 코스피 1줄",
-  "kosdaq_driver": "수급/테마 중심 코스닥 1줄",
-
-  "kospi_flow_comment": "외국인 수급 코스피 1줄",
-  "kosdaq_flow_comment": "외국인 수급 코스닥 1줄",
-
-  "fx_driver": "주요원인: ... (1줄)",
-
-  "score_comment": "🟢/🟡/🔴 중 1개 + 행동 가이드 1줄(라운드 박스용)",
-
-  "dxy_driver": "🟢/🟡/🔴 + 수치/이슈 1줄",
-  "us_rate_driver": "⚪/🔺/🔽 + 1줄",
-  "flow_driver": "⚪/🔺/🔽 + 1줄",
-  "trade_driver": "⚪/🔺/🔽 + 1줄",
-
-  "overseas1": "해외 이슈 1줄",
-  "overseas2": "해외 이슈 1줄",
-  "domestic1": "국내 이슈 1줄",
-  "domestic2": "국내 이슈 1줄"
-}}
-
-조건:
-- 모든 값은 한 줄, 과도한 수식/괄호 남발 금지
-- 'score_comment'는 예시처럼 딱 1줄 행동 가이드로만 작성
-- dxy/us_rate/flow/trade는 '라벨 없이' 내용만 작성 (앞 라벨은 HTML에 이미 있음)
-"""
-
-    resp = model.generate_content(prompt)
-    return _extract_json(resp.text or "")
+    raise RuntimeError(f"Gemini 모델 호출에 실패했습니다. 마지막 오류: {last_err}")
 
 
 def _update_title_and_date(html: str, date_str: str) -> str:
