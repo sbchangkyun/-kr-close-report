@@ -53,11 +53,11 @@ def gemini_generate_commentary(date_str: str) -> dict:
     genai.configure(api_key=api_key)
 
     # 무료/가벼운 모델 우선. 필요 시 Actions env로 GEMINI_MODEL을 바꿀 수 있게 해둠.
-    # 무료/가벼운 모델 우선. 필요 시 Actions env로 GEMINI_MODEL을 바꿀 수 있게 해둠.
     # (주의) google-generativeai(v1beta)에서는 일부 모델명이 404(NotFound)로 실패할 수 있어, 안전한 후보를 순차 시도합니다.
     preferred_model = os.environ.get("GEMINI_MODEL", "gemini-1.5-flash-latest")
     candidates = [
         preferred_model,
+        "gemini-1.5-flash",
         "gemini-1.5-flash-latest",
         "gemini-1.5-pro-latest",
         "gemini-1.0-pro",
