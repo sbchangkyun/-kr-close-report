@@ -33,7 +33,6 @@ jobs:
       - name: Generate report (update index.html)
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODEL: gemini-1.5-flash-latest
         run: |
           python .github/workflows/scripts/generate_report.py
 
